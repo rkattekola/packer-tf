@@ -1,0 +1,61 @@
+{
+  "builders": [
+    {
+      "type": "vsphere-iso",
+
+      "vcenter_server": "{{user `vsphere-server`}}",
+      "username": "{{user `vsphere-user`}}",
+      "password": "{{user `vsphere-password`}}",
+      "insecure_connection": "true",
+      
+      "datacenter": "{{user `vsphere-datacenter`}}",
+      "cluster": "{{user `vsphere-cluster`}}",
+      "datastore": "{{user `vsphere-datastore`}}",
+      "folder": "{{user `vsphere-folder`}}",
+      
+      
+      "vm_name": "{{user `vm-name`}}",
+      "notes": "Build via Packer",
+      "guest_os_type": "rhel7_64Guest",
+      "convert_to_template": true,
+
+      "CPUs": "{{user `vm-cpu-num`}}",
+      "RAM": "{{user `vm-mem-size`}}",
+      "RAM_reserve_all": false,
+
+      "storage": [
+        {
+          "disk_size": "{{user `os-disk-size`}}",
+          "disk_thin_provisioned": "{{user `disk-thin-provision`}}"
+        }
+      ],
+      "disk_controller_type": "pvscsi",
+
+      "network_adapters": [
+        {
+          "network": "{{user `vsphere-network`}}",
+          "network_card": "vmxnet3"
+        }
+      ],
+
+      "ssh_password": "{{user `ssh-password`}}",
+      "ssh_username": "{{user `ssh-username`}}",
+
+      "floppy_files": [
+        "ks.cfg"
+      ],
+
+      "iso_paths": [
+        "{{user `os_iso_path`}}"
+      ],
+
+      "boot_order": "disk,cdrom,floppy",
+      "boot_wait": "10s",
+      "boot_command": [
+        "<esc><wait>",
+        "linux inst.text ks=hd:fd0:/ks.cfg<enter>"
+      ]
+    }
+  ]
+}
+
